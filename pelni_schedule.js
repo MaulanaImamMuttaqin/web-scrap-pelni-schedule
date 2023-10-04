@@ -5,11 +5,29 @@ const fs = require('fs');
     const browser = await puppeteer.launch({headless:false});
     const page = await browser.newPage();
 
-    const key_parameter = process.argv[2];
-    if(!key_parameter) {
-      console.error(`Error: Kekurangan Argumen, ex : node schedule_from papua`)
+    let direction;
+    let key; 
+
+    try {
+        const direction_parameter = process.argv[2];
+        const key_parameter = process.argv[3];
+
+        if(!direction_parameter || !["from", "to"].includes(direction_parameter)){
+            throw new Error(`Error: Parmaeter Yang dimasukkan salah harus di antara "from" atau "to", node pelni_schedule from|to papua`);
+        }
+
+        if(!key_parameter) {
+            throw new Error(`Error: Kekurangan Argumen lokasi, ex : node pelni_schedule from papua`);
+        }
+
+        direction = direction_parameter;
+        key = key_parameter;
+    } catch (error) {
+        console.error(error.message)
+        process.exit();
     }
-    const key = key_parameter;
+
+
     let listJadwal = [];
   // Your scraping logic goes here
     await page.goto('https://www.pelni.co.id/reservasi-tiket');
@@ -30,7 +48,7 @@ const fs = require('fs');
     await page.click(".swal-button-container .swal-button.swal-button--confirm");
     await page.delay(1000);
 
-    const listId = await page.getAllIdAsalKeberangkatanByKeWord( key);
+    const listId = await page.getAllIdAsalKeberangkatanByKeWord(direction === "from" ? key : "");
 
     for (let index = 0; index < listId.length; index++) {
         if(listId[index] == "") continue;
@@ -39,7 +57,7 @@ const fs = require('fs');
 
         await page.tungguLoadingSelesai( "#select2-ticket_des-container");
 
-        const listIdTujuan = await page.getAllListTujuan();
+        const listIdTujuan = await page.getAllIdTujuanKeberangkatanByKeWord(direction === "to" ? key : "");
 
         if(listIdTujuan.length > 0){
             for (let indexTujuan = 0; indexTujuan < listIdTujuan.length; indexTujuan++) {
@@ -107,7 +125,8 @@ const fs = require('fs');
                   await page.bringToFront();
 
                   const jsonData = JSON.stringify(listJadwal, null, 2);
-                  fs.writeFileSync("dari_" + key + ".json", jsonData);
+
+                  fs.writeFileSync(`${direction}_${key}.json`, jsonData);
                 }
             }
         }
