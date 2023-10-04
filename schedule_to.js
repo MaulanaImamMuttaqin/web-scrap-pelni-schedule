@@ -1,21 +1,4 @@
-const puppeteer = require('puppeteer');
-const {
-    getTextFromElement,
-    submitFormData,
-    extractFormData,
-    extractTable,
-    addAttributeToElement,
-    removeElement,
-    getSelectValues,
-    tungguLoadingSelesai,
-    getAllIdAsalKeberangkatanByKeWord,
-    getAllIdTujuanKeberangkatanByKeWord,
-    pilihAsalKeberangkatanFromId,
-    pilihTujuanKeberangkatanFromId,
-    delay,
-    scrollToViewAndClick
-}  = require("./schedule_module");
-
+const puppeteer = require("./puppeteer-extensions");
 const fs = require('fs');
 
 (async () => {
@@ -24,7 +7,7 @@ const fs = require('fs');
 
     const key_parameter = process.argv[2];
     if(!key_parameter) {
-      console.error(`Error: Kekurangan Argumen, ex : node schedule_to papua`)
+      console.error(`Error: Kekurangan Argumen, ex : node schedule_from papua`)
     }
     const key = key_parameter;
     let listJadwal = [];
@@ -33,66 +16,60 @@ const fs = require('fs');
 
     await page.waitForSelector('body');
 
-    await removeElement(page, ".loader-popup");
+    await page.removeElement( ".loader-popup");
 
-    await addAttributeToElement(page,"form","target","_blank");
+    await page.addAttributeToElement("form","target","_blank");
 
     await page.select("#ticket_male", "1");
 
-    await scrollToViewAndClick(page, "#NoIconDemo");
+    await page.scrollToViewAndClick( "#NoIconDemo");
     await page.click(".ui-state-default.ui-state-highlight");
 
-    
-
-    await tungguLoadingSelesai(page, "#ticket_class");
-    await delay(500);
+    await page.tungguLoadingSelesai( "#ticket_class");
+    await page.delay(500);
     await page.click(".swal-button-container .swal-button.swal-button--confirm");
-    await delay(1000);
+    await page.delay(1000);
 
-    const listId = await getAllIdAsalKeberangkatanByKeWord(page, "");
+    const listId = await page.getAllIdAsalKeberangkatanByKeWord("");
 
     for (let index = 0; index < listId.length; index++) {
         if(listId[index] == "") continue;
-
-        const success = await pilihAsalKeberangkatanFromId(page, listId[index])
+        const success = await page.pilihAsalKeberangkatanFromId( listId[index])
         if(!success) return;
 
-        await tungguLoadingSelesai(page, "#select2-ticket_des-container");
+        await page.tungguLoadingSelesai( "#select2-ticket_des-container");
 
-        const listIdTujuan = await getAllIdTujuanKeberangkatanByKeWord(page, key);
+        const listIdTujuan = await page.getAllIdTujuanKeberangkatanByKeWord(key);
 
         if(listIdTujuan.length > 0){
             for (let indexTujuan = 0; indexTujuan < listIdTujuan.length; indexTujuan++) {
                 console.log(`origin ${index + 1} out of ${listId.length} / destination ${indexTujuan + 1} out of ${listIdTujuan.length}`)
-                // console.log(`"${listId[index]}" "${listIdTujuan[indexTujuan]}"`)
-                console.log(listIdTujuan[indexTujuan])
                 if(listIdTujuan[indexTujuan] == "") continue;
-                await pilihTujuanKeberangkatanFromId(page, listIdTujuan[indexTujuan])
-                await tungguLoadingSelesai(page, "#ticket_class");
-                await delay(500);
+                await page.pilihTujuanKeberangkatanFromId( listIdTujuan[indexTujuan])
+                await page.tungguLoadingSelesai( "#ticket_class");
+                await page.delay(500);
                 const button = await page.waitForSelector(".swal-button-container .swal-button.swal-button--confirm", {timeout:1000});
                 if(button) {
                   await page.click(".swal-button-container .swal-button.swal-button--confirm");
-                  await delay(1000);
+                  await page.delay(1000);
                 }
-                const listKelasKapal = await getSelectValues(page, "#ticket_class");
+                const listKelasKapal = await page.getSelectValues( "#ticket_class");
                 if(listKelasKapal.length > 1){
                   await page.select('#ticket_class', listKelasKapal[1]);
 
-                  const origin = await getTextFromElement(page, "#select2-ticket_org-container");
-                  const destination = await getTextFromElement(page, "#select2-ticket_des-container");
-                  const formData = await extractFormData(page, "form");
+                  const origin = await page.getTextFromElement( "#select2-ticket_org-container");
+                  const destination = await page.getTextFromElement( "#select2-ticket_des-container");
+                  const formData = await page.extractFormData( "form");
 
                   const newPage = await browser.newPage();
 
-                  await submitFormData(newPage,'https://www.pelni.co.id/reservasi-tiket' , formData);
+                  await newPage.submitFormData('https://www.pelni.co.id/reservasi-tiket' , formData);
 
                   await newPage.waitForNavigation({ waitUntil: 'domcontentloaded' });
 
-                  const data = await extractTable(newPage, "#example");
-                  console.log(data);
-                  const new_data = data.map((d) => {
+                  const data = await newPage.extractTable("#example");
 
+                  const new_data = data.map((d) => {
                     const regex_berangkat = /(\d\d:\d\d)(.*)Detail Harga/;
                     const match_berangkat =  regex_berangkat.exec(d.Berangkat)
                     const text_berangkat = `${match_berangkat[2]} - ${match_berangkat[1]}`;
@@ -134,6 +111,7 @@ const fs = require('fs');
                 }
             }
         }
+        // await page.delay(2000);
     }
 
     const jsonData = JSON.stringify(listJadwal, null, 2);

@@ -38,45 +38,5 @@
     "berangkat": "Rabu, 11 Oktober 2023 - 10:00",
     "sampai": "Selasa, 17 Oktober 2023 - 03:00",
     "lama_waktu": "05 hari 17 jam 00 menit"
-  },
-  {
-    "origin": "AMBON, MALUKU    AMQ - AMBON",
-    "destination": "ASMAT, PAPUA SELATAN    AGS - AGATS",
-    "kapal": "(NP-108-15) KM.SIRIMAUEKONOMI EKS KABIN KLS 1 / A",
-    "berangkat": "Sabtu, 21 Oktober 2023 - 03:00",
-    "sampai": "Senin, 30 Oktober 2023 - 03:00",
-    "lama_waktu": "09 hari 00 jam 00 menit"
-  },
-  {
-    "origin": "AMBON, MALUKU    AMQ - AMBON",
-    "destination": "FAKFAK, PAPUA BARAT    FKQ - FAK-FAK",
-    "kapal": "(NP-122-C) KM.SANGIANGEKONOMI EKS KABIN KLS 2 / B",
-    "berangkat": "Senin, 09 Oktober 2023 - 14:00",
-    "sampai": "Rabu, 11 Oktober 2023 - 08:00",
-    "lama_waktu": "01 hari 18 jam 00 menit"
-  },
-  {
-    "origin": "AMBON, MALUKU    AMQ - AMBON",
-    "destination": "FAKFAK, PAPUA BARAT    FKQ - FAK-FAK",
-    "kapal": "(NP-128-B) KM.NGGAPULUEKONOMI EKS KABIN KLS 2 / B",
-    "berangkat": "Sabtu, 14 Oktober 2023 - 22:00",
-    "sampai": "Selasa, 17 Oktober 2023 - 07:00",
-    "lama_waktu": "02 hari 09 jam 00 menit"
-  },
-  {
-    "origin": "AMBON, MALUKU    AMQ - AMBON",
-    "destination": "FAKFAK, PAPUA BARAT    FKQ - FAK-FAK",
-    "kapal": "(NP-122-C) KM.SANGIANGEKONOMI EKS KABIN KLS 2 / B",
-    "berangkat": "Senin, 23 Oktober 2023 - 14:00",
-    "sampai": "Rabu, 25 Oktober 2023 - 08:00",
-    "lama_waktu": "01 hari 18 jam 00 menit"
-  },
-  {
-    "origin": "AMBON, MALUKU    AMQ - AMBON",
-    "destination": "FAKFAK, PAPUA BARAT    FKQ - FAK-FAK",
-    "kapal": "(NP-128-B) KM.NGGAPULUEKONOMI EKS KABIN KLS 2 / B",
-    "berangkat": "Sabtu, 28 Oktober 2023 - 22:00",
-    "sampai": "Selasa, 31 Oktober 2023 - 07:00",
-    "lama_waktu": "02 hari 09 jam 00 menit"
   }
 ]

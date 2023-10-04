@@ -1,0 +1,42 @@
+[
+  {
+    "origin": "ASMAT, PAPUA SELATAN    AGS - AGATS",
+    "destination": "ALOR, NUSA TENGGARA TIMUR    KBH - KALABAHI",
+    "kapal": "(NP-108-15) KM.SIRIMAUEKONOMI EKS KABIN KLS 1 / A",
+    "berangkat": "Jumat, 06 Oktober 2023 - 20:00",
+    "sampai": "Rabu, 11 Oktober 2023 - 09:00",
+    "lama_waktu": "04 hari 13 jam 00 menit"
+  },
+  {
+    "origin": "ASMAT, PAPUA SELATAN    AGS - AGATS",
+    "destination": "AMBON, MALUKU    AMQ - AMBON",
+    "kapal": "(NP-108-15) KM.SIRIMAUEKONOMI EKS KABIN KLS 1 / A",
+    "berangkat": "Jumat, 06 Oktober 2023 - 20:00",
+    "sampai": "Minggu, 15 Oktober 2023 - 15:00",
+    "lama_waktu": "08 hari 19 jam 00 menit"
+  },
+  {
+    "origin": "ASMAT, PAPUA SELATAN    AGS - AGATS",
+    "destination": "AMBON, MALUKU    AMQ - AMBON",
+    "kapal": "(NP-112-B) KM.LEUSEREKONOMI EKS KABIN KLS 1 / A",
+    "berangkat": "Kamis, 12 Oktober 2023 - 03:00",
+    "sampai": "Senin, 16 Oktober 2023 - 07:00",
+    "lama_waktu": "04 hari 04 jam 00 menit"
+  },
+  {
+    "origin": "ASMAT, PAPUA SELATAN    AGS - AGATS",
+    "destination": "BAU-BAU, SULAWESI TENGGARA    BBM - BAU-BAU/MURHUM",
+    "kapal": "(NP-108-15) KM.SIRIMAUEKONOMI EKS KABIN KLS 1 / A",
+    "berangkat": "Jumat, 06 Oktober 2023 - 20:00",
+    "sampai": "Jumat, 13 Oktober 2023 - 22:00",
+    "lama_waktu": "07 hari 02 jam 00 menit"
+  },
+  {
+    "origin": "ASMAT, PAPUA SELATAN    AGS - AGATS",
+    "destination": "BAU-BAU, SULAWESI TENGGARA    BBM - BAU-BAU/MURHUM",
+    "kapal": "(NP-112-B) KM.LEUSEREKONOMI EKS KABIN KLS 1 / A",
+    "berangkat": "Kamis, 12 Oktober 2023 - 03:00",
+    "sampai": "Rabu, 18 Oktober 2023 - 04:00",
+    "lama_waktu": "06 hari 01 jam 00 menit"
+  }
+]
