@@ -44,6 +44,7 @@ puppeteer.Page.prototype.extractFormData = async function ( formSelector){
 puppeteer.Page.prototype.extractTable = async function ( tableSelector){
   return await this.evaluate((selector) => {
     const table = document.querySelector(selector);
+    if(!table) return [];
     const headers = Array.from(table.querySelectorAll('thead th')).map((header) =>
       header.textContent.trim() ? header.textContent.trim().replace(/\s+/g, '_') : ''
     );

@@ -2,7 +2,7 @@ const puppeteer = require("./puppeteer-extensions");
 const fs = require('fs');
 
 (async () => {
-    const browser = await puppeteer.launch({headless:false});
+    const browser = await puppeteer.launch({headless:false, timeout:120000});
     const page = await browser.newPage();
 
     let direction;
@@ -57,15 +57,23 @@ const fs = require('fs');
 
         await page.tungguLoadingSelesai( "#select2-ticket_des-container");
 
-        const listIdTujuan = await page.getAllIdTujuanKeberangkatanByKeWord(direction === "to" ? key : "");
+        const origin = await page.getTextFromElement( "#select2-ticket_org-container");
+        console.log(`origin ${index + 1} out of ${listId.length}`);
+        console.log(`Origin => ${origin}`);
 
+        const getListIdTujuan = await page.getAllIdTujuanKeberangkatanByKeWord(direction === "to" ? key : "");
+        const listIdTujuan = getListIdTujuan.filter(i=> i !== '');
         if(listIdTujuan.length > 0){
             for (let indexTujuan = 0; indexTujuan < listIdTujuan.length; indexTujuan++) {
-                console.log(`origin ${index + 1} out of ${listId.length} / destination ${indexTujuan + 1} out of ${listIdTujuan.length}`)
+                // if(indexTujuan+1 < 18) continue;
                 if(listIdTujuan[indexTujuan] == "") continue;
                 await page.pilihTujuanKeberangkatanFromId( listIdTujuan[indexTujuan])
                 await page.tungguLoadingSelesai( "#ticket_class");
                 await page.delay(500);
+
+                const destination = await page.getTextFromElement( "#select2-ticket_des-container");
+                console.log(`|__Destination (${indexTujuan + 1} out of ${listIdTujuan.length}) => ${destination}`)
+
                 const button = await page.waitForSelector(".swal-button-container .swal-button.swal-button--confirm", {timeout:1000});
                 if(button) {
                   await page.click(".swal-button-container .swal-button.swal-button--confirm");
@@ -75,8 +83,6 @@ const fs = require('fs');
                 if(listKelasKapal.length > 1){
                   await page.select('#ticket_class', listKelasKapal[1]);
 
-                  const origin = await page.getTextFromElement( "#select2-ticket_org-container");
-                  const destination = await page.getTextFromElement( "#select2-ticket_des-container");
                   const formData = await page.extractFormData( "form");
 
                   const newPage = await browser.newPage();
@@ -84,7 +90,7 @@ const fs = require('fs');
                   await newPage.submitFormData('https://www.pelni.co.id/reservasi-tiket' , formData);
 
                   await newPage.waitForNavigation({ waitUntil: 'domcontentloaded' });
-
+                  await page.delay(2000);
                   const data = await newPage.extractTable("#example");
 
                   const new_data = data.map((d) => {
@@ -96,9 +102,9 @@ const fs = require('fs');
                     const match_sampai =  regex_sampai.exec(d.Sampai)
                     const text_sampai = `${match_sampai[2]} - ${match_sampai[1]}`;
 
-                    const regex_lama = /(.*)transit/;
+                    const regex_lama = /(.*)(transit|langsung)/;
                     const match_lama =  regex_lama.exec(d.Lama_Perjalanan)
-                    const text_lama = `${match_lama[1]}`;
+                    const text_lama =  `${match_lama[1]}`;
                     return {
                       origin,
                       destination,
@@ -119,7 +125,8 @@ const fs = require('fs');
 
                   const uniqueData = [...uniqueObjects.values()];
 
-                  console.log(uniqueData)
+                  console.log(`  |__found ${uniqueData.length} schedules`);
+                  console.log("_________________________________________________");
                   if(data.length > -1) listJadwal.push(...uniqueData);
                   await newPage.close();
                   await page.bringToFront();
@@ -127,14 +134,20 @@ const fs = require('fs');
                   const jsonData = JSON.stringify(listJadwal, null, 2);
 
                   fs.writeFileSync(`${direction}_${key}.json`, jsonData);
+                }else{
+                  console.log(`  |__"Kelas Kapal" does not exists in this travel, ...skipping`);
+                  console.log("___________________________________________________________");
                 }
             }
+        }else{
+          console.log(`Destination => Destination does not exist from this origin `)
+          console.log("_____________________________________________________________");
         }
         // await page.delay(2000);
     }
 
     const jsonData = JSON.stringify(listJadwal, null, 2);
-    fs.writeFileSync(key + ".json", jsonData);
+    fs.writeFileSync(`${direction}_${key}.json`, jsonData);
     await page.close();
 
 })();
